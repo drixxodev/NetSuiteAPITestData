@@ -1,0 +1,180 @@
+apply plugin: 'java'
+
+defaultTasks 'help'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'axis:axis:1.4'
+}
+
+ext {
+    groupName = 'Axis Proxy'
+
+    wsdlVersion = nsProperties.'wsdl.version'
+    hostUrl = nsProperties.'host.url'
+    assert wsdlVersion != null : 'The property wsdl.version must be set to run this gradle script.'
+    assert hostUrl != null : 'The property host.url must be set to run this gradle script.'
+
+    wsdlUrl = hostUrl + '/wsdl/v' + wsdlVersion + '_0/netsuite.wsdl'
+    srcDir = projectDir.canonicalPath + '/src'
+    packageName = 'wsproxy'
+    proxyDownloadTimeout = 300000
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir srcDir
+        }
+    }
+}
+
+task help {
+    description 'Prints help about usage'
+    group groupName
+
+    doLast {
+        println 'Description: This is the Gradle build script for generating NetSuite web services Axis proxy.\n\n' +
+                'Usage:\n' +
+                'gradle ":Axis Proxy:help"           Prints help about building axis proxies\n' +
+                'gradle ":Axis Proxy:generate"       Generates client proxies using Axis WSDL2Java\n' +
+                'gradle ":Axis Proxy:compileJava"    Compiles proxy classes\n' +
+                'gradle ":Axis Proxy:jar"            Jar up the proxy classes\n' +
+                'gradle ":Axis Proxy:clean"          Cleans the current build\n' +
+                'gradle ":Axis Proxy:rebuild"        Cleans the build, regenerates proxies and recreate JAR'
+    }
+}
+
+task generate(type: JavaExec) {
+    description 'Generates client proxies using Axis WSDL2Java'
+    group groupName
+
+    classpath configurations.compile
+
+    doFirst {
+        println 'Generating client interfaces using Apache Axis from ' + wsdlUrl
+        rmDir(srcDir)
+    }
+
+    doLast {
+        removeTooManyParameters()
+    }
+
+    inputs.property('wsdlVersion', wsdlVersion)
+    inputs.property('hostUrl', hostUrl)
+    outputs.dir srcDir
+
+    main = 'org.apache.axis.wsdl.WSDL2Java'
+    args '--output', srcDir, '--verbose', '--all', '--timeout', proxyDownloadTimeout,
+         '--NStoPkg', 'http://axis.apache.org/ns/interop=interop',
+         '--NStoPkg', 'urn:platform_' + wsdlVersion + '.webservices.netsuite.com=nsloader.' + packageName + '.platform',
+         '--NStoPkg', 'urn:messages_' + wsdlVersion + '.platform.webservices.netsuite.com=nsloader.' + packageName + '.platform.messages',
+         '--NStoPkg', 'urn:common_' + wsdlVersion + '.platform.webservices.netsuite.com=nsloader.' + packageName + '.platform.common',
+         '--NStoPkg', 'urn:types.common_' + wsdlVersion + '.platform.webservices.netsuite.com=nsloader.' + packageName + '.platform.common.types',
+         '--NStoPkg', 'urn:faults_' + wsdlVersion + '.platform.webservices.netsuite.com=nsloader.' + packageName + '.platform.faults',
+         '--NStoPkg', 'urn:types.faults_' + wsdlVersion + '.platform.webservices.netsuite.com=nsloader.' + packageName + '.platform.faults.types',
+         '--NStoPkg', 'urn:core_' + wsdlVersion + '.platform.webservices.netsuite.com=nsloader.' + packageName + '.platform.core',
+         '--NStoPkg', 'urn:types.core_' + wsdlVersion + '.platform.webservices.netsuite.com=nsloader.' + packageName + '.platform.core.types',
+         '--NStoPkg', 'urn:relationships_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.relationships',
+         '--NStoPkg', 'urn:types.relationships_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.relationships.types',
+         '--NStoPkg', 'urn:lists.webservices.netsuite.com=nsloader.' + packageName + '.lists',
+         '--NStoPkg', 'urn:scheduling_' + wsdlVersion + '.activities.webservices.netsuite.com=nsloader.' + packageName + '.activities.scheduling',
+         '--NStoPkg', 'urn:types.scheduling_' + wsdlVersion + '.activities.webservices.netsuite.com=nsloader.' + packageName + '.activities.scheduling.types',
+         '--NStoPkg', 'urn:communication_' + wsdlVersion + '.general.webservices.netsuite.com=nsloader.' + packageName + '.general.communication',
+         '--NStoPkg', 'urn:types.communication_' + wsdlVersion + '.general.webservices.netsuite.com=nsloader.' + packageName + '.general.communication.types',
+         '--NStoPkg', 'urn:support_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.support',
+         '--NStoPkg', 'urn:types.support_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.support.types',
+         '--NStoPkg', 'urn:transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions',
+         '--NStoPkg', 'urn:sales_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.sales',
+         '--NStoPkg', 'urn:types.sales_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.sales.types',
+         '--NStoPkg', 'urn:bank_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.bank',
+         '--NStoPkg', 'urn:types.bank_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.bank.types',
+         '--NStoPkg', 'urn:general_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.general',
+         '--NStoPkg', 'urn:types.general_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.general.types',
+         '--NStoPkg', 'urn:inventory_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.inventory',
+         '--NStoPkg', 'urn:types.inventory_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.inventory.types',
+         '--NStoPkg', 'urn:customization_' + wsdlVersion + '.setup.webservices.netsuite.com=nsloader.' + packageName + '.setup.customization',
+         '--NStoPkg', 'urn:types.customization_' + wsdlVersion + '.setup.webservices.netsuite.com=nsloader.' + packageName + '.setup.customization.types',
+         '--NStoPkg', 'urn:employees_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.employees',
+         '--NStoPkg', 'urn:types.employees_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.employees.types',
+         '--NStoPkg', 'urn:accounting_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.accounting',
+         '--NStoPkg', 'urn:types.accounting_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.accounting.types',
+         '--NStoPkg', 'urn:filecabinet_' + wsdlVersion + '.documents.webservices.netsuite.com=nsloader.' + packageName + '.documents.filecabinet',
+         '--NStoPkg', 'urn:types.filecabinet_' + wsdlVersion + '.documents.webservices.netsuite.com=nsloader.' + packageName + '.documents.filecabinet.types',
+         '--NStoPkg', 'urn:employees_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.employees',
+         '--NStoPkg', 'urn:types.employees_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.employees.types',
+         '--NStoPkg', 'urn:customers_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.customers',
+         '--NStoPkg', 'urn:types.customers_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.customers.types',
+         '--NStoPkg', 'urn:financial_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.financial',
+         '--NStoPkg', 'urn:types.financial_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.financial.types',
+         '--NStoPkg', 'urn:purchases_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.purchases',
+         '--NStoPkg', 'urn:types.purchases_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.purchases.types',
+         '--NStoPkg', 'urn:marketing_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.marketing',
+         '--NStoPkg', 'urn:types.marketing_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.marketing.types',
+         '--NStoPkg', 'urn:website_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.website',
+         '--NStoPkg', 'urn:types.website_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.website.types',
+         '--NStoPkg', 'urn:demandplanning_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.demandplanning',
+         '--NStoPkg', 'urn:types.demandplanning_' + wsdlVersion + '.transactions.webservices.netsuite.com=nsloader.' + packageName + '.transactions.demandplanning.types',
+         '--NStoPkg', 'urn:supplychain_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.supplychain',
+         '--NStoPkg', 'urn:types.supplychain_' + wsdlVersion + '.lists.webservices.netsuite.com=nsloader.' + packageName + '.lists.supplychain.types',
+         wsdlUrl, '--wrapArrays'
+}
+
+compileJava {
+    description 'Compiles proxy sources'
+    group groupName
+
+    dependsOn generate
+}
+
+jar {
+    description 'Jar up the proxy classes'
+    group groupName
+
+    jar.destinationDir = file(libDir)
+    jar.archiveName = 'nsws.jar'
+}
+
+clean {
+    description 'Cleanup Proxy'
+    group groupName
+
+    delete srcDir
+    delete jar.archivePath
+}
+
+task rebuild(dependsOn: [clean, generate, jar]) {
+    description 'Rebuilds Axis proxy'
+    group groupName
+}
+
+
+def removeTooManyParameters() {
+    println 'Searching for constructors with too many parameters...'
+    fileTree(dir: srcDir).getFiles().each {File file -> checkFileForTooManyParameters(file)}
+}
+
+def checkFileForTooManyParameters(file) {
+    if (!file.name.endsWith('.java')) {
+        return
+    }
+    String content = file.getText('UTF-8').normalize()
+    def parametersCount = 0
+    content.eachLine { line ->
+        if (line ==~ /.*private nsloader\.$packageName.*/) {
+            parametersCount++
+        }
+    }
+    if (parametersCount > 200) {
+        def startIndex = content.indexOf('public ' + file.name.split('\\.')[0] + '(\n')
+        if (startIndex < 0) {
+            return
+        }
+        def endIndex = content.indexOf('}', startIndex)
+        file.write((content - content.substring(startIndex - 4, endIndex + 3)).denormalize())
+        println file.name + ': Removed constructor with ' + parametersCount + ' parameters'
+    }
+}

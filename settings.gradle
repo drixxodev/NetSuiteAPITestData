@@ -1,0 +1,3 @@
+include 'Axis Proxy'
+
+rootProject.name = 'NetSuite Data Loader Client'

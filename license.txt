@@ -1,0 +1,8 @@
+NetSuite is providing this code ("Code") to you as a User
+of the NetSuite Service ("Service") to be used pursuant to the
+NetSuite SuiteCloud Terms of Service ("SuiteCloud TOS") at
+http://www.netsuite.com/portal/resource/terms-of-service.shtml
+or its successor url. The Code will be considered "SuiteCloud Technologies"
+under the SuiteCloud TOS and will govern your use of the Code at the time
+the Code is downloaded, installed, copied or otherwise used.
+THE CODE IS FOR USE ONLY WITH THE SERVICE.

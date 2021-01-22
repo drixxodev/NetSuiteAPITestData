@@ -1,0 +1,5 @@
+externalId,companyName,subsidiary,custentity_checkbox:BOOLEAN,custentity_datetimenormal:DATE,custentity_decimal:DOUBLE,custentity_integer:LONG,custentity_listrecord:SELECT,custentity_listrecord:SELECT(E),custentity_multiselect:MULTISELECT,custentity_multiselect:MULTISELECT(E),custentity_freeformtextnormal:STRING
+EID_CUST_TOUGH_1,Tough Company 1,1,T,8/8/2014,1.11,123,,,107|90,,Sacrebleu
+EID_CUST_TOUGH_2,Tough Company 2,1,T,8/8/2014,1.11,123,,EID_CUST_TOUGH_1,,EID_CUST_TOUGH_1,"Sacrebleu 1,2,3,4,5,6,7,8,9,0"
+EID_CUST_TOUGH_3,Tough Company 3,1,T,8/8/2014,1.11,123,,EID_CUST_TOUGH_1,,EID_CUST_TOUGH_1|EID_CUST_TOUGH_2,!@#$%^&*()\\\/'\"
+EID_CUST_TOUGH_4,Tough Company 4,1,T,2016-02-25T12:08:56-0700,1.11,123

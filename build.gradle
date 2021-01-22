@@ -1,0 +1,160 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+defaultTasks 'help'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'axis:axis:1.4'
+    compile 'commons-cli:commons-cli:1.2'
+    compile 'commons-io:commons-io:2.4'
+    compile 'log4j:log4j:1.2.8'
+    compile 'net.sf.opencsv:opencsv:2.3'
+
+    compile project(':Axis Proxy')
+}
+
+ext.nsProperties = new Properties()
+nsProperties.load(new FileInputStream(new File(rootDir, '/config/nsloader.properties')))
+
+ext {
+    groupName = project.name
+
+    baseDir = projectDir.getCanonicalPath()
+    srcDir = baseDir + '/src'
+    libDir = baseDir + '/lib'
+    configDir = baseDir + '/config'
+    logDir = nsProperties.'log.dir'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir srcDir
+        }
+    }
+}
+
+task help {
+    description 'Prints usage help'
+    group groupName
+    doLast {
+        println 'Description: Tool to Load Data into NetSuite Using SuiteTalk Web Services.\n' +
+                '             The client uses the Apache Axis platform.\n\n' +
+                'Usage:\n' +
+                'gradle :help           Prints help about building client application\n' +
+                'gradle :compileJava    Compiles client java classes\n' +
+                'gradle :jar            Creates a complete client jar file\n' +
+                'gradle :package        Zip the client\n' +
+                'gradle :clean          Cleans the current build\n' +
+                'gradle :libs           Copies all runtime dependencies into lib directory\n' +
+                'gradle :deploy         Performs a new build including regenerating the proxy classes'
+    }
+}
+
+compileJava {
+    description 'Compiles client java classes'
+    group groupName
+}
+
+jar {
+    description 'Jar up the client classes'
+    group groupName
+
+    manifest {
+        attributes 'Manifest-Version': '1.0',
+                   'Implementation-Title': 'NSLoader',
+                   'Built-By': 'NetSuite Integration Team',
+                   'Implementation-Vendor': 'NetSuite, Inc.',
+                   'Implementation-Vendor-Id': 'com.netsuite',
+                   'Main-Class': 'Main',
+                   'Class-Path': configurations.runtime.collect { it.getName() }.join(' ')
+    }
+
+    destinationDir = new File(libDir)
+    baseName = 'NSLoader'
+}
+
+task ('package', type: Zip) {
+    description 'Zip the client with all dependencies'
+    group groupName
+
+    destinationDir = new File(baseDir + '/build')
+    baseName = 'NetSuiteDataLoader'
+
+    from (baseDir + '/Axis Proxy') {
+        include 'build.gradle'
+        into 'Axis Proxy'
+    }
+    from (srcDir) {
+        into 'src'
+    }
+    from (baseDir) {
+        include 'NSLoader.bat', 'NSLoader.sh', 'build.gradle', 'settings.gradle', 'license.txt'
+    }
+    from (configDir) {
+        def nsProperties = 'nsloader_packed.properties'
+        include nsProperties, 'log4j.properties'
+        into 'config'
+        rename {fileName -> fileName == nsProperties ? 'nsloader.properties' : fileName}
+    }
+    from (baseDir + '/META-INF') {
+        include 'MANIFEST.MF'
+        into 'META-INF'
+    }
+    from (baseDir + '/doc') {
+        exclude 'examples/customers_create_massive.csv'
+        into 'doc'
+    }
+    from (logDir) {
+        exclude '*'
+        into 'log'
+    }
+}
+
+task libs(type: Copy) {
+    description 'Copies all runtime dependencies into lib directory'
+    group groupName
+
+    from configurations.runtime.files
+    into libDir
+    exclude '**/nsws.jar'
+
+    doLast {
+        // Log dir should have been packed in ZIP
+        // but because of bug GRADLE-2827 we need to create it
+        // before user executes NSLoader
+        mkDir(logDir)
+    }
+}
+
+clean {
+    description 'Cleanup client'
+    group groupName
+
+    delete jar.archivePath
+    delete logDir
+}
+
+task deploy(dependsOn: [':clean', ':Axis Proxy:clean', ':jar', ':libs']) {
+    description 'Performs a new build including regenerating the proxy classes'
+    group groupName
+}
+
+tasks['package'].mustRunAfter ':Axis Proxy:clean'
+clean.mustRunAfter ':Axis Proxy:clean'
+libs.mustRunAfter ':jar'
+
+
+
+def mkDir(directory) {
+    new File(directory).mkdirs()
+}
+
+def rmDir(directory) {
+    new File(directory).deleteDir()
+}

@@ -1,0 +1,22 @@
+externalId,itemId,leadTime,totalValue,lastInvtCountDate,isInactive,isTaxable,countryOfManufacture,subsidiaryList,taxSchedule,salesDescription,class
+EID_ITEM_1,ITEM_1,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_2,ITEM_2,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_3,ITEM_3,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_4,ITEM_4,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_5,ITEM_5,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_6,ITEM_6,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_7,ITEM_7,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_8,ITEM_8,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_9,ITEM_9,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_10,ITEM_10,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_11,ITEM_11,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_12,ITEM_12,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_13,ITEM_13,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_14,ITEM_14,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_15,ITEM_15,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_16,ITEM_16,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_17,ITEM_17,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_18,ITEM_18,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_19,ITEM_19,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_20,ITEM_20,12345678,-12345.123,1/1/2013,F,T,_argentina,1|3|9,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1
+EID_ITEM_21,ITEM_21,12345678,-12345.123,2016-02-25T00:00:00-0700,F,T,_argentina,1,1,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",1

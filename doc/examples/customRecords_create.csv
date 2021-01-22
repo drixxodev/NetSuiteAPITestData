@@ -1,0 +1,2 @@
+externalId,recType,name,custrecord_parkingplace:SELECT,custrecord_owner:SELECT,custrecord_drivers:MULTISELECT,custrecord_registrationnumber:STRING,custrecord_parkingplace2:SELECT,custrecord_allfieldtypes:SELECT
+EID_CR_CAR_1,30,Batmobile,1,29,29|68|37,1B2 3456,2,1

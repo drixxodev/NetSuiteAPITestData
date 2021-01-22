@@ -1,0 +1,2 @@
+entity(E),transactionShipAddress;shipAttention,transactionShipAddress;shipAddressee,transactionShipAddress;shipAddr1,transactionShipAddress;shipAddr2,transactionShipAddress;shipCity,transactionShipAddress;shipState,item.1.item(E),item.1.quantity,item.1.amount,item.1.class,item.1.custcol_textanormal:STRING
+EID_CUST_TOUGH_1,Sir,Nach Zelson,2955 Campus Drive,Suite 100,San Mateo,CA,EID_ITEM_1,3,3,1,Sacrebleu
